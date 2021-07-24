@@ -1,0 +1,9 @@
+--index-url https://mirrors.aliyun.com/pypi/simple/
+numpy==1.21.1
+matplotlib==3.4.2
+pydub==0.25.1
+ffprobe==0.5
+PyWavelets
+scipy
+python-ffmpeg
+keyboard
