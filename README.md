@@ -16,4 +16,6 @@ $ pip install -r requirements.txt
 $ sudo python main.py
 ```
 
-Click on "ESC" to end the process and get the chart.
+Click on "ESC" to end the process and get the chart like this.
+
+![example](example.png)
