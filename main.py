@@ -4,12 +4,14 @@ import os
 import threading
 import time
 import wave
+from multiprocessing.context import Process
 from typing import List
 
 import keyboard as keyboard
 import matplotlib.pyplot as plt
 import numpy
 import pywt
+import simpleaudio
 from numpy.typing.tests.data.fail import ndarray
 from pydub import AudioSegment
 from pydub.playback import play
@@ -24,6 +26,7 @@ class PlayMusicThread(threading.Thread):
         threading.Thread.__init__(self)
         self.name = name
         self.filename = filename
+        self._stop_event = threading.Event()
 
     def run(self):
         print("start thread：" + self.name)
@@ -34,6 +37,12 @@ class PlayMusicThread(threading.Thread):
         print("play music in " + self.name)
         sound = AudioSegment.from_wav(self.filename)
         play(sound)
+
+    def stop(self):
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
 
 
 def _read_wav(filename: str):
@@ -132,9 +141,6 @@ def _bpm_detector(data, fs):
 
 def get_bpm_array(filename: str,
     window: int = default_window_length) -> ndarray:
-    import ffmpeg
-    print(round(float(ffmpeg.probe(filename)['format']['duration'])))
-
     samps, fs = _read_wav(filename)
     n = 0
     nsamps = len(samps)
@@ -192,10 +198,29 @@ def transform_audio_file(filename: str):
     return wav_file_name
 
 
-def play_music_and_get_time(filename: str):
-    thread = PlayMusicThread("Thread-1", filename)
-    thread.start()
-    thread.join()
+def play_music(filename: str):
+    seg = AudioSegment.from_wav(filename)
+
+    playback = simpleaudio.play_buffer(
+        seg.raw_data,
+        num_channels=seg.channels,
+        bytes_per_sample=seg.sample_width,
+        sample_rate=seg.frame_rate
+    )
+
+    try:
+        print("play music....")
+        playback.wait_done()
+    except KeyboardInterrupt:
+        playback.stop()
+
+
+def play_music_and_get_time(filename: str) -> Process:
+    import multiprocessing
+    proc = multiprocessing.Process(target=play_music, args=(filename,))
+    proc.start()
+
+    return proc
 
 
 def record_keyboard(
@@ -223,8 +248,10 @@ def record_keyboard(
 if __name__ == "__main__":
     wav_filename = transform_audio_file('songs.mp3')
     bpms = get_bpm_array(wav_filename)
-    play_music_and_get_time(wav_filename)
+    music_proc = play_music_and_get_time(wav_filename)
     keyboard_window_records = record_keyboard(len(bpms))
+
+    music_proc.terminate()
 
     plot_x = list(
         range(0,
