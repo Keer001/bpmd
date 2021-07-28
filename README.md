@@ -37,7 +37,7 @@ Date,Starting Time,Duration
 2021.4.6,14:41,133
 ```
 
-2. Download sound style file to the project folder, click this (URL)[https://github.com/musescore/MuseScore/blob/master/share/sound/FluidR3Mono_GM.sf3].
+2. Download sound style file to the project folder, click this [URL](https://github.com/musescore/MuseScore/blob/master/share/sound/FluidR3Mono_GM.sf3).
 
 3. Execute some commands:
 
