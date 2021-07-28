@@ -7,3 +7,5 @@ PyWavelets
 scipy
 python-ffmpeg
 keyboard
+mido
+fluidsynth

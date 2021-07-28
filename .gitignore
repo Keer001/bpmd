@@ -1,4 +1,7 @@
 /venv
+/.idea
+
 *.mp3
 *.wav
-/.idea
+*.mid
+*.csv*.sf3

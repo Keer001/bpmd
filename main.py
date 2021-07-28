@@ -246,7 +246,7 @@ def record_keyboard(
 
 
 if __name__ == "__main__":
-    wav_filename = transform_audio_file('songs.mp3')
+    wav_filename = transform_audio_file('song.mp3')
     bpms = get_bpm_array(wav_filename)
     music_proc = play_music_and_get_time(wav_filename)
     keyboard_window_records = record_keyboard(len(bpms))
