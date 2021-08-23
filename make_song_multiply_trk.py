@@ -79,6 +79,7 @@ def generate_one_trk(records: List[List[str]], record_index: int) -> Any:
     program = audio_map[name]['program']
     velocity = audio_map[name]['velocity']
     pitch_base = audio_map[name]['pitch']
+
     channel = audio_map[name]['channel']
     print("name: {}, program: {}, velocity: {}".format(name, program, velocity))
 
@@ -108,14 +109,14 @@ def generate_one_trk(records: List[List[str]], record_index: int) -> Any:
                              time=round(480 * note_time),
                              channel=channel)
             )
-            track.append(
-                mido.Message('note_off',
-                             note=pitch,
-                             velocity=velocity,
-                             time=round(480 * (1 - note_time)),
-                             channel=channel)
-            )
-            index += 1
+    track.append(
+        mido.Message('note_off',
+                     note=pitch,
+                     velocity=velocity,
+                     time=round(480 * (1 - note_time)),
+                     channel=channel)
+    )
+    index += 1
 
     return track
 
